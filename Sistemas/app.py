@@ -2,7 +2,12 @@ import os
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
-from server import make_greeting
+try:
+    # When running as a package (e.g., uvicorn Sistemas.app:app)
+    from .server import make_greeting
+except ImportError:
+    # Fallback for running from within the folder (uvicorn app:app or python app.py)
+    from server import make_greeting
 
 
 class HelloRequest(BaseModel):
@@ -39,4 +44,3 @@ if __name__ == "__main__":
 
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
-
