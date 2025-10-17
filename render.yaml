@@ -1,9 +1,10 @@
 services:
   - type: web
-    name: greeter-http
+    name: grpc-greeter
     env: python
     plan: free
-    rootDir: Sistemas
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /
+    buildCommand: "pip install -r requirements.txt && python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. greeter.proto"
+    startCommand: "python server.py"
+    envVars:
+      - key: PORT
+        value: 50051
